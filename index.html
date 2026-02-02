@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Link tree</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="profile">
+        <div class="avatar">
+          <img
+            class="img-avatar"
+            src="avatar.jpg"
+            alt="Avatar"
+          />
+        </div>
+        <h1 id="profile-name"></h1>
+        <p class="bio" id="profile-bio"></p>
+      </header>
+
+      <nav class="links"></nav>
+
+      <footer id="footer-text"></footer>
+    </div>
+
+    <script>
+      const linksContainer = document.querySelector(".links");
+      const nameElement = document.getElementById("profile-name");
+      const bioElement = document.getElementById("profile-bio");
+      const footerElement = document.getElementById("footer-text");
+      const avatarImg = document.querySelector(".img-avatar");
+
+      fetch("./config.json")
+        .then((response) => response.json())
+        .then((data) => {
+          nameElement.innerText = data.name;
+          bioElement.innerText = data.bio;
+          footerElement.innerText = `${data.year} ${data.name}`;
+          
+          document.title = `${data.name}'s Link tree`;
+          avatarImg.alt = `${data.name}'s Avatar`;
+
+          data.links.forEach((social) => {
+            let anchor = document.createElement("a");
+            anchor.target = "_blank";
+            anchor.className = "link-item";
+            anchor.href = social.link;
+
+            let linkName = document.createElement("span");
+            linkName.innerText = social.name;
+
+            let arrow = document.createElement("span");
+            arrow.className = "arrow";
+
+            anchor.appendChild(linkName);
+            anchor.appendChild(arrow);
+            linksContainer.appendChild(anchor);
+          });
+        })
+        .catch((error) => console.error(error));
+    </script>
+  </body>
+</html>
